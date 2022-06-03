@@ -1,3 +1,6 @@
+import 'package:batch28_api_starter/model/user_model.dart';
+import 'package:batch28_api_starter/repository/user_repository.dart';
+import 'package:batch28_api_starter/utils/show_message.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -16,6 +19,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  _registerUser(User user) async {
+    bool isLogin = await UserRespository().registerUser(user);
+    if (isLogin) {
+      _displayMessage(true);
+    } else {
+      _displayMessage(false);
+    }
+  }
+
+  _displayMessage(bool isLogin) {
+    if (isLogin) {
+      displaySucessMessage(context, "Regidter Successfully");
+    } else {
+      displayErrorMessage(context, "Register Failed");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,14 +156,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // User user = User(
-                      //   email: _emailController.text,
-                      //   address: _addressController.text,
-                      //   country: _countryController.text,
-                      //   phone: _phoneController.text,
-                      //   username: _usernameController.text,
-                      //   password: _passwordController.text,
-                      // );
+                      User user = User(
+                        email: _emailController.text,
+                        address: _addressController.text,
+                        country: _countryController.text,
+                        phone: _phoneController.text,
+                        
+                        username: _usernameController.text,
+                        password: _passwordController.text,
+                      );
+                      _registerUser(user);
                     }
                   },
                   child: const Text(
